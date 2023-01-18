@@ -36,7 +36,7 @@
           <label for="title">Description</label>
           <input type="text"
           v-model="formCard.description"
-           class="form-control" id="title" placeholder="Enter title">
+           class="form-control" id="title" placeholder="Enter Description">
         </div>
       
         <div class="d-f mt-2">
@@ -225,7 +225,7 @@ axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
           if (response.data.status === "success"){
             this.showModal = false;
             this.getColumns();
-            this.showSuccess(response.data.message);
+            this.showSuccess('Column Added Successfully');
           }
         } catch (error) {
           console.log(error);
@@ -245,7 +245,7 @@ axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
                 description: "",
                 column_id: "",
               };
-              this.showSuccess(response.data.message);
+              this.showSuccess('Card Updated Successfully');
               this.getColumns();
             }
             return;
@@ -253,7 +253,7 @@ axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
           const response = await axios.post(`/cards/${formCard.column_id}`, formCard);
           if (response.data.status === "success"){
             this.showModal = false;
-            this.showSuccess(response.data.message);
+            this.showSuccess('Card Added Successfully');
             this.getColumns();
           }
         } catch (error) {
