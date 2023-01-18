@@ -1,11 +1,24 @@
+
 <template>
     
     <div class="container">
   <div class="form">
-    <form action="#" class="login-form">
-      <input type="text" name="username" placeholder="Username">
-      <input type="text" name="password" placeholder="Password">
+    <form action="#" 
+    @submit.prevent="login(form)"
+    class="login-form">
+      <input type="text"
+      v-model="form.username"
+       name="username" placeholder="Username">
+       <!-- <div v-if="errors.username">
+            <span class="text-sm text-red-400">{{ errors.username[0] }}</span>
+          </div> -->
+      <input type="text"
+      v-model="form.password"
+       name="password" placeholder="Password">
       <button type="submit" class="btn">Login</button>
+      <!-- <div v-if="errors.password">
+            <span class="text-sm text-red-400">{{ errors.password[0] }}</span>
+          </div> -->
       <p class="message">Already registered?<router-link
         :to="{ name: 'Signup' }"
         class="font-medium text-indigo-600 hover:text-indigo-500"
@@ -23,17 +36,33 @@
 </div>
 </template>
 
-<script>
+<script >
+ import axios from "axios";
+ import store from '../store/store'
+ axios.defaults.baseURL = import.meta.env.VITE_API_URL;
  
  export default {
   name: 'Login',
   data() {
     return {
+      form: {
+        username: '',
+        password: '',
+      },
       // ...
     }
   },
   methods: {
     // ...
+    async login(form) {
+      try {
+        const response =  await axios.post('login', form);
+        store.commit('setToken', response.data.token);
+        this.$router.push({ name: 'Dashboard' });
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   mounted() {
     // ...
@@ -92,7 +121,12 @@ body{
   width: 365px;
   margin: auto;
 }
-
+.text-red-400 {
+  color: #e53e3e;
+}
+.text-sm {
+  font-size: 0.875rem;
+}
 .form{
   position: relative;
   z-index: 1;

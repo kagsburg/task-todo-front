@@ -2,20 +2,27 @@
 
 <template>
    <div> 
-    <Modal :modalActive="showModal">
-      <h3 slot="header">Add Column</h3>
-      <div slot="body">
-        <input type="text" placeholder="Enter Column Name" v-model="column_name">
-      </div>
-      <div slot="footer">
-        <button class="btn btn-default" @click="">
+
+    <Teleport to="body">
+     <!-- use the modal component, pass in the prop  -->
+    <modal :show="showModal" @close="showModal = false">
+      <template #header>
+        <h3>custom header</h3>
+      </template>
+      <template #body>
+       
+        </template>
+      <template #footer>
+        <button class="btn btn-default" @click="showModal = false">
           Close
         </button>
-        <button class="btn btn-primary" @click="addColumn">
-          Add Column
+        <button class="btn btn-primary" @click="showModal = false">
+          OK
         </button>
-      </div>
-    </Modal>
+      </template>
+    </modal>
+  </Teleport>
+
     <section class="navigation">
   <div class="nav-container">
     <div class="brand">
@@ -36,7 +43,7 @@
 <!-- section for add column button -->
 <section class="add-column">
   <div class="add-column__container">
-    <button class="add-column__container__button" @click="">Add Column</button>
+    <button class="add-column__container__button" @click="openModal()">Add Column</button>
   </div>
 </section>
 <div class="boards-container">
@@ -85,22 +92,25 @@ import { ref } from 'vue';
     data() {
         return {
         // ...
+        showModal: false,
         };
     },
-    setup(){
-      const showModal = ref(false);
-      return { showModal };
-    },
     methods: {
+      openModal () {
+        this.showModal = true;
+      },
       addColumn: function() {
-        this.$http.post('/addColumn', {
-          column_name: this.column_name
-        }).then((response) => {
-          this.showModal = false;
-          this.getColumns();
-        }, (response) => {
-          console.log(response);
-        });
+        this.$modal.show({
+          template: `
+            <form>
+              <input type="text" placeholder="Column Name">
+              <input type="submit" value="Add Column">
+            </form>
+          `
+        })
+        this.showModal = true;
+     
+
       },
 
     // ...
@@ -108,7 +118,7 @@ import { ref } from 'vue';
     mounted() {
         // ...
     },
-    components: { Modal }
+    components: { Modal },
 }
 
 

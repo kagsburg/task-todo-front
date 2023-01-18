@@ -9,7 +9,7 @@ const store = new Vuex.Store({
     state: {
         user: {
             data: { name: 'timo' },
-            token: 123
+            token: ''
         }
     },
     // mutations: {},
