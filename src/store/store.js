@@ -9,10 +9,17 @@ const store = new Vuex.Store({
     state: {
         user: {
             data: { name: 'timo' },
-            token: ''
+            token: localStorage.getItem('token') || null
         }
     },
-    // mutations: {},
+    mutations: {
+        setToken(state, token) {
+            state.user.token = token
+        },
+        setUser(state, user) {
+            state.user.data = user
+        }
+    },
     // actions: {},
     // modules: {},
     // getters: {}

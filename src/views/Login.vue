@@ -9,29 +9,21 @@
       <input type="text"
       v-model="form.username"
        name="username" placeholder="Username">
-       <!-- <div v-if="errors.username">
-            <span class="text-sm text-red-400">{{ errors.username[0] }}</span>
-          </div> -->
-      <input type="text"
+      <input type="password"
       v-model="form.password"
        name="password" placeholder="Password">
       <button type="submit" class="btn">Login</button>
-      <!-- <div v-if="errors.password">
-            <span class="text-sm text-red-400">{{ errors.password[0] }}</span>
-          </div> -->
-      <p class="message">Already registered?<router-link
+      <div v-if="errors">
+            <span class="text-sm text-red-400">{{ errors }}</span>
+          </div>
+      <p class="message">New User?<router-link
         :to="{ name: 'Signup' }"
         class="font-medium text-indigo-600 hover:text-indigo-500"
       >
       Create an account
       </router-link></p>
   </form>
-    <form action="#" class="register-form">
-      <input type="text" name="email" placeholder="Email">
-      <input type="text" name="password" placeholder="Password">
-      <button type="submit" class="btn">Submit</button>
-      <p class="message">New User? <a href="#">Create an account</a></p>
-    </form> 
+   
   </div>
 </div>
 </template>
@@ -49,18 +41,31 @@
         username: '',
         password: '',
       },
+      errors: null,
       // ...
     }
   },
   methods: {
     // ...
+    // setErrors
+    setErrors(error) {
+      this.errors = error;
+    },
     async login(form) {
       try {
         const response =  await axios.post('login', form);
+        console.log(response.data);
+        if (response.data.statusCode === 401){
+          this.setErrors(response.data.message);
+          return;
+        }
         store.commit('setToken', response.data.token);
-        this.$router.push({ name: 'Dashboard' });
+        store.commit('setUser', response.data.user);
+        localStorage.setItem('token', response.data.token);
+        this.$router.push({ name: 'Home' });
       } catch (error) {
         console.log(error);
+        this.setErrors(error);
       }
     },
   },
@@ -158,9 +163,9 @@ body{
   }
 }
 
-.form .register-form{
-  display: none;
-}
+// .form .register-form{
+//   display: none;
+// }
 
 
 
