@@ -4,7 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Login from '../views/Login.vue'
 import Signup from '../views/Register.vue'
-
+import store from '../store/store'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -14,6 +14,7 @@ const router = new VueRouter({
     {
       path: '/',
       name: 'home',
+      meta: { requiresAuth: true },
       component: Dashboard
     },
     {
@@ -26,15 +27,22 @@ const router = new VueRouter({
       name: 'Signup',
       component: Signup
   },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue')
-    // }
   ]
+})
+// const router = createRouter({
+//   history: createWebHistory(),
+//   routes
+// })
+router.beforeEach((to, from, next) => {
+  console.log (store.state.user.token)
+  if (to.meta.requiresAuth && !store.state.user.token ) {
+      next({ name: 'Login' });
+  } else if ((to.name === 'Login' || to.name === 'Signup') && store.state.user.token) {
+      next({ name: 'Home' });
+  }
+  else {
+      next();
+  }
 })
 
 export default router

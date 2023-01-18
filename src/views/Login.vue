@@ -6,7 +6,12 @@
       <input type="text" name="username" placeholder="Username">
       <input type="text" name="password" placeholder="Password">
       <button type="submit" class="btn">Login</button>
-      <p class="message">Already registered?<a href="#"> Sign in</a></p>
+      <p class="message">Already registered?<router-link
+        :to="{ name: 'Signup' }"
+        class="font-medium text-indigo-600 hover:text-indigo-500"
+      >
+      Create an account
+      </router-link></p>
   </form>
     <form action="#" class="register-form">
       <input type="text" name="email" placeholder="Email">
@@ -50,6 +55,7 @@ $font-family: 'Poppins', sans-serif;
   width: 100%;
   padding: 15px;
   border-radius: 10px;
+  cursor: pointer;
   background: #FF5722;
   color: $fontcolor;
   text-transform: uppercase;
@@ -77,6 +83,9 @@ $font-family: 'Poppins', sans-serif;
 body{
   font-family: $font-family;
   background: $background-color;
+  margin: 0;
+  padding: 0;
+
 }
 .container{
   padding: 8% 0 0;
